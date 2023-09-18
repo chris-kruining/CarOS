@@ -9,8 +9,8 @@ fn main() -> eframe::Result<()> {
     let native_options = eframe::NativeOptions {
         active: false,
         always_on_top: true,
-        decorated: false,
-        resizable: false,
+        // decorated: false,
+        // resizable: false,
         follow_system_theme: true,
         initial_window_pos: Some(egui::pos2(100f32, 100f32)),
         initial_window_size: Some(egui::vec2(800f32, 500f32)),

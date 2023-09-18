@@ -5,6 +5,29 @@ members = [
     "launcher",
 ]
 
+[workspace.package]
+name = "car_os"
+version = "0.1.0"
+authors = [
+    "Chris Kruining"
+]
+edition = "2021"
+description = "A short description of my package"
+documentation = "https://example.com/bar"
+
+[workspace.dependencies]
+egui = "0.22.0"
+eframe = { version = "0.22.0", default-features = false, features = [
+    "accesskit",
+    "default_fonts",
+    "glow",
+    "persistence"
+] }
+log = "0.4"
+serde = { version = "1", features = [ "derive" ] }
+wasm-bindgen-futures = "0.4"
+env_logger = "0.10"
+
 [profile.release]
 opt-level = 2
 
