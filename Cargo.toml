@@ -6,7 +6,6 @@ members = [
 ]
 
 [workspace.package]
-name = "car_os"
 version = "0.1.0"
 authors = [
     "Chris Kruining"
@@ -27,6 +26,9 @@ log = "0.4"
 serde = { version = "1", features = [ "derive" ] }
 wasm-bindgen-futures = "0.4"
 env_logger = "0.10"
+smithay = { git = "https://github.com/Smithay/smithay.git", rev = "36a0ec6", features = [ "renderer_glow", "wayland_frontend", "backend_winit" ] }
+smithay-egui = { git = "https://github.com/Smithay/smithay-egui.git", rev = "4f971e4" }
+
 
 [profile.release]
 opt-level = 2
