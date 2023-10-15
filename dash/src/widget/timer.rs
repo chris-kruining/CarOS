@@ -2,13 +2,14 @@ use chrono::{Utc, Duration, DateTime};
 use egui::{Response, Ui, Widget};
 use crate::widget::ProgressCircle;
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 enum Status {
     Active,
     Paused,
     Completed,
 }
 
+#[derive(Debug)]
 pub struct Timer {
     duration: Duration,
     finish_at: DateTime<Utc>,
@@ -69,6 +70,11 @@ impl Timer {
                 let difference = self.finish_at - self.paused_at;
                 let percentage = difference.num_milliseconds() as f32 / self.duration.num_milliseconds() as f32;
 
+                dbg!(self);
+                dbg!(difference.num_milliseconds());
+                dbg!(self.duration.num_milliseconds());
+                dbg!(percentage);
+
                 (1. - percentage) * 360.
             },
         }
@@ -77,13 +83,13 @@ impl Timer {
 
 impl Widget for Timer {
     fn ui(mut self, ui: &mut Ui) -> Response {
+        let circle = ProgressCircle::new(self.angle());
+
         if self.is_running() {
             self.tick();
 
             ui.ctx().request_repaint();
         }
-
-        let circle = ProgressCircle::new(self.angle());
 
         ui.add(circle)
     }
