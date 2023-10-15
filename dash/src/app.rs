@@ -1,5 +1,7 @@
+use chrono::Duration;
 use eframe::epaint::FontFamily;
 use egui::{ScrollArea, FontDefinitions, FontData, Separator, Ui, TopBottomPanel, Layout, Label, Align, RichText, Button};
+use crate::widget::{ProgressCircle, Timer};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -94,6 +96,8 @@ impl eframe::App for App {
 
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
             ui.heading("My Side Panel");
+
+            ui.add(Timer::new(Duration::seconds(5)));
 
             ui.horizontal(|ui| {
                 ui.label("Write something: ");

@@ -20,7 +20,7 @@ fn main() -> eframe::Result<()> {
     };
 
     eframe::run_native(
-        "CarOS Launcher",
+        "CarOS dash",
         native_options,
         Box::new(|cc| Box::new(dash::App::new(cc))),
     )
