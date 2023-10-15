@@ -11,11 +11,11 @@ egui.workspace = true
 eframe.workspace = true
 log.workspace = true
 serde.workspace = true
-smithay.workspace = true
-smithay-egui.workspace = true
+#smithay.workspace = true
+#smithay-egui.workspace = true
 anyhow = "1.0"
-egui_demo_lib = "0.22"
 tracing-subscriber = "0.3"
+dash = { path = "../dash" }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 env_logger.workspace = true
