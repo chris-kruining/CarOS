@@ -1,7 +1,7 @@
 mod progress_circle;
-mod timer;
+mod circular_timer;
 
 pub mod shape;
 
 pub use progress_circle::ProgressCircle;
-pub use timer::Timer;
+pub use circular_timer::CircularTimer;

@@ -1,12 +1,9 @@
-use egui::{Pos2, Response, Sense, Shape, Stroke, Ui, Vec2, Painter, Widget};
-use egui::epaint::PathShape;
-use egui::plot::LineStyle;
+use egui::{Pos2, Response, Shape, Stroke, Painter};
 
 pub struct CircleOptions {
     pub angle: f32,
     pub offset: f32,
     pub closed: bool,
-    pub line_style: LineStyle,
 }
 
 impl Default for CircleOptions {
@@ -15,7 +12,6 @@ impl Default for CircleOptions {
             angle: 360.,
             offset: 0.,
             closed: true,
-            line_style: LineStyle::Solid,
         }
     }
 }
@@ -25,8 +21,7 @@ pub struct Circle {
     stroke: Stroke,
     angle: f32,
     offset: f32,
-    closed: bool,
-    line_style: LineStyle,
+    closed: bool
 }
 
 impl Circle {
@@ -34,25 +29,24 @@ impl Circle {
         let CircleOptions {
             angle,
             offset,
-            closed,
-            line_style
+            closed
         } = options;
 
-        Self { radius, stroke, angle, offset, closed, line_style }
+        Self { radius, stroke, angle, offset, closed }
     }
 }
 
 impl Circle {
     pub fn paint(self, painter: &Painter, response: &Response) {
-        let Self { radius, stroke, angle, offset, closed, line_style } = self;
+        let Self { radius, stroke, angle, offset, closed } = self;
+
+        let points = create_points(radius - stroke.width - 1., response.rect.center(), angle, offset);
 
         painter.add(
-            Shape::Path(PathShape {
-                closed,
-                stroke,
-                points: create_points(radius - stroke.width - 1., response.rect.center(), angle, offset),
-                fill: Default::default(),
-            })
+            match closed {
+                true => Shape::closed_line(points, stroke),
+                false => Shape::line(points, stroke),
+            }
         );
     }
 }

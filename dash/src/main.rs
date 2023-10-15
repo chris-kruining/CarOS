@@ -10,7 +10,7 @@ fn main() -> eframe::Result<()> {
         active: false,
         always_on_top: true,
         // decorated: false,
-        resizable: false,
+        // resizable: false,
         follow_system_theme: true,
         initial_window_pos: Some(egui::pos2(100f32, 100f32)),
         initial_window_size: Some(egui::vec2(800f32, 500f32)),
@@ -22,7 +22,7 @@ fn main() -> eframe::Result<()> {
     eframe::run_native(
         "CarOS dash",
         native_options,
-        Box::new(|cc| Box::new(dash::App::new(cc))),
+        Box::new(|cc| Box::new(dash::app::App::new(cc))),
     )
 }
 

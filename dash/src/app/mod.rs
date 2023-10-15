@@ -1,7 +1,12 @@
+
+pub mod widget;
+
+use std::ops::DerefMut;
 use chrono::Duration;
 use eframe::epaint::FontFamily;
-use egui::{ScrollArea, FontDefinitions, FontData, Separator, Ui, TopBottomPanel, Layout, Label, Align, RichText, Button};
-use crate::widget::{ProgressCircle, Timer};
+use egui::{FontDefinitions, FontData, Separator, Ui, TopBottomPanel, Layout, Align, RichText, Widget, menu, SidePanel, CentralPanel, Slider};
+use crate::app::widget::CircularTimer;
+use crate::service::{headlines::Headlines, timer::Timer};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -15,7 +20,10 @@ pub struct App {
     value: f32,
 
     #[serde(skip)]
-    headlines: crate::Headlines,
+    headlines: Headlines,
+
+    #[serde(skip)]
+    timer: Timer,
 }
 
 impl Default for App {
@@ -24,7 +32,8 @@ impl Default for App {
             // Example stuff:
             label: "Kaas is awesome!".to_owned(),
             value: 2.7,
-            headlines: crate::Headlines::new(),
+            headlines: Headlines::new(),
+            timer: Timer::new(Duration::seconds(5)),
         }
     }
 }
@@ -50,7 +59,7 @@ fn configure_font(ctx: &egui::Context) {
     let font_name = "MesloLGS";
     let mut fonts = FontDefinitions::default();
 
-    fonts.font_data.insert(font_name.to_owned(), FontData::from_static(include_bytes!("../../MesloLGS_NF_Regular.ttf")));
+    fonts.font_data.insert(font_name.to_owned(), FontData::from_static(include_bytes!("../../../MesloLGS_NF_Regular.ttf")));
 
     if let Some(family) = fonts.families.get_mut(&FontFamily::Proportional) {
         family.insert(0, font_name.to_owned());
@@ -75,10 +84,7 @@ impl eframe::App for App {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self { label, value, headlines } = self;
-        let mut timer = Timer::new(Duration::seconds(5));
-
-        timer.resume();
+        let Self { label, value, headlines, timer } = self;
 
         // Examples of how to create different panels and windows.
         // Pick whichever suits you.
@@ -86,9 +92,9 @@ impl eframe::App for App {
         // For inspiration and more examples, go to https://emilk.github.io/egui
 
         #[cfg(not(target_arch = "wasm32"))] // no File->Quit on web pages!
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+        TopBottomPanel::top("top_panel").show(ctx, |ui| {
             // The top panel is often a good place for a menu bar:
-            egui::menu::bar(ui, |ui| {
+            menu::bar(ui, |ui| {
                 ui.menu_button("File", |ui| {
                     if ui.button("Quit").clicked() {
                         _frame.close();
@@ -97,19 +103,35 @@ impl eframe::App for App {
             });
         });
 
-        egui::SidePanel::left("side_panel").show(ctx, |ui| {
-            ui.heading("My Side Panel");
+        SidePanel::left("side_panel").show(ctx, |ui| {
+            ui.add(CircularTimer::new(timer));
 
-            ui.add(timer);
+            ui.horizontal(|ui| {
+                if ui.button("Start").clicked() {
+                    timer.resume();
+                }
+
+                if ui.button("Pause").clicked() {
+                    timer.pause();
+                }
+
+                if ui.button("Reset").clicked() {
+                    timer.reset();
+                }
+            });
+
+            ui.heading("My Side Panel");
 
             ui.horizontal(|ui| {
                 ui.label("Write something: ");
                 ui.text_edit_singleline(label);
             });
 
-            ui.add(egui::Slider::new(value, 0.0..=10.0).text("value"));
+            ui.add(Slider::new(value, 0.0..=10.0).text("value"));
             if ui.button("Increment").clicked() {
                 *value += 1.0;
+
+                timer.resume();
             }
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
@@ -130,10 +152,10 @@ impl eframe::App for App {
 
         menu(ctx);
 
-        egui::CentralPanel::default().show(ctx, |ui| {
+        CentralPanel::default().show(ctx, |ui| {
             header(ui);
 
-            self.headlines.render(ui, |a, ui| {
+            headlines.render(ui, |a, ui| {
                 ui.heading(&a.title);
                 ui.hyperlink_to(&a.description, &a.url);
             });
@@ -154,7 +176,7 @@ fn menu(ctx: &egui::Context) {
     TopBottomPanel::top("menu").show(ctx, |ui| {
         ui.add_space(10.);
 
-        egui::menu::bar(ui, |ui| {
+        menu::bar(ui, |ui| {
             ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
                 ui.label(RichText::new("📚").text_style(egui::TextStyle::Heading));
             });
