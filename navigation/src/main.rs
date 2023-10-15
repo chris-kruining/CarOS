@@ -1,3 +1,47 @@
+#![warn(clippy::all, rust_2018_idioms)]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
+
+// When compiling natively:
+#[cfg(not(target_arch = "wasm32"))]
+fn main() -> eframe::Result<()> {
+    env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
+
+    let native_options = eframe::NativeOptions {
+        active: false,
+        always_on_top: true,
+        // decorated: false,
+        // resizable: false,
+        follow_system_theme: true,
+        initial_window_pos: Some(egui::pos2(100f32, 100f32)),
+        initial_window_size: Some(egui::vec2(800f32, 500f32)),
+        min_window_size: None,
+        max_window_size: None,
+        ..Default::default()
+    };
+
+    eframe::run_native(
+        "CarOS Navigation",
+        native_options,
+        Box::new(|cc| Box::new(navigation::App::new(cc))),
+    )
+}
+
+// When compiling to web using trunk:
+#[cfg(target_arch = "wasm32")]
 fn main() {
-    println!("Hello, world!");
+    // Redirect `log` message to `console.log` and friends:
+    eframe::WebLogger::init(log::LevelFilter::Debug).ok();
+
+    let web_options = eframe::WebOptions::default();
+
+    wasm_bindgen_futures::spawn_local(async {
+        eframe::WebRunner::new()
+            .start(
+                "the_canvas_id", // hardcode it
+                web_options,
+                Box::new(|cc| Box::new(navigation::App::new(cc))),
+            )
+            .await
+            .expect("failed to start eframe");
+    });
 }
