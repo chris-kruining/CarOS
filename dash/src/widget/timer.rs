@@ -66,9 +66,10 @@ impl Timer {
         match self.status {
             Status::Completed => 360.,
             _ => {
-                let diff = self.finish_at - Utc::now();
+                let difference = self.finish_at - self.paused_at;
+                let percentage = difference.num_milliseconds() as f32 / self.duration.num_milliseconds() as f32;
 
-                (diff.num_seconds() as f32 / self.duration.num_seconds() as f32) * 360.
+                (1. - percentage) * 360.
             },
         }
     }

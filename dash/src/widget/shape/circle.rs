@@ -1,4 +1,4 @@
-use egui::{Pos2, Response, Sense, Shape, Stroke, Ui, Vec2, Widget};
+use egui::{Pos2, Response, Sense, Shape, Stroke, Ui, Vec2, Painter, Widget};
 use egui::epaint::PathShape;
 use egui::plot::LineStyle;
 
@@ -42,22 +42,18 @@ impl Circle {
     }
 }
 
-impl Widget for Circle {
-    fn ui(self, ui: &mut Ui) -> Response {
+impl Circle {
+    pub fn paint(self, painter: &Painter, response: &Response) {
         let Self { radius, stroke, angle, offset, closed, line_style } = self;
 
-        let (response, painter) = ui.allocate_painter(Vec2::splat(radius * 2.), Sense::hover());
-        let center = response.rect.center();
-
-        let bg = Shape::Path(PathShape {
-            closed,
-            stroke,
-            points: create_points(radius - stroke.width - 1., center, angle, offset),
-            fill: Default::default(),
-        });
-        painter.add(bg);
-
-        response
+        painter.add(
+            Shape::Path(PathShape {
+                closed,
+                stroke,
+                points: create_points(radius - stroke.width - 1., response.rect.center(), angle, offset),
+                fill: Default::default(),
+            })
+        );
     }
 }
 

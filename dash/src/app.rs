@@ -76,6 +76,9 @@ impl eframe::App for App {
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let Self { label, value, headlines } = self;
+        let mut timer = Timer::new(Duration::seconds(5));
+
+        timer.resume();
 
         // Examples of how to create different panels and windows.
         // Pick whichever suits you.
@@ -97,7 +100,7 @@ impl eframe::App for App {
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
             ui.heading("My Side Panel");
 
-            ui.add(Timer::new(Duration::seconds(5)));
+            ui.add(timer);
 
             ui.horizontal(|ui| {
                 ui.label("Write something: ");
