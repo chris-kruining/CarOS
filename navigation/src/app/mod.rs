@@ -1,13 +1,14 @@
-use std::default;
-use eframe::epaint::FontFamily;
-use egui::{FontDefinitions, FontData};
-// use walkers::{Tiles, Map, MapMemory, Position, providers::openstreetmap};
 use default::Default;
+use std::default;
+
+use eframe::epaint::FontFamily;
+use egui::{FontData, FontDefinitions};
+use walkers::{Map, MapMemory, Position, providers::openstreetmap, Tiles, Zoom};
 
 pub struct App {
     label: String,
-    // tiles: Tiles,
-    // map_memory: MapMemory,
+    tiles: Tiles,
+    map_memory: MapMemory,
 }
 
 impl App {
@@ -15,9 +16,12 @@ impl App {
         configure_font(&cc.egui_ctx);
 
         Self {
-            label: "Navigation".to_string(),
-            // tiles: Tiles::new(openstreetmap, cc.egui_ctx.to_owned()),
-            // map_memory: MapMemory::default(),
+            label: "Navigation is awesome!".to_string(),
+            tiles: Tiles::new(openstreetmap, cc.egui_ctx.to_owned()),
+            map_memory: MapMemory {
+                zoom: Zoom::try_from(19.).unwrap(),
+                ..Default::default()
+            },
         }
     }
 }
@@ -26,7 +30,7 @@ fn configure_font(ctx: &egui::Context) {
     let font_name = "MesloLGS";
     let mut fonts = FontDefinitions::default();
 
-    fonts.font_data.insert(font_name.to_owned(), FontData::from_static(include_bytes!("../../MesloLGS_NF_Regular.ttf")));
+    fonts.font_data.insert(font_name.to_owned(), FontData::from_static(include_bytes!("../../../MesloLGS_NF_Regular.ttf")));
 
     if let Some(family) = fonts.families.get_mut(&FontFamily::Proportional) {
         family.insert(0, font_name.to_owned());
@@ -53,11 +57,12 @@ impl eframe::App for App {
             .frame(rimless)
             .show(ctx, |ui| {
                 ui.label(self.label.to_owned());
-                // ui.add(Map::new(
-                //     Some(&mut self.tiles),
-                //     &mut self.map_memory,
-                //     Position::new(17.03664, 51.09916)
-                // ));
+
+                ui.add(Map::new(
+                    Some(&mut self.tiles),
+                    &mut self.map_memory,
+                    Position::new(5.5340775, 51.7691855),
+                ));
             });
     }
 }

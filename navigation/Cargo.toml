@@ -8,11 +8,7 @@ documentation.workspace = true
 
 [dependencies]
 egui.workspace = true
-eframe = { version = "0.22.0", default-features = false, features = [
-    "accesskit",
-    "default_fonts",
-    "glow",
-] }
+eframe.workspace = true
 log.workspace = true
 serde.workspace = true
 walkers = "0.8.0"

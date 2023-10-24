@@ -30,11 +30,12 @@ impl Timer {
     }
 
     pub fn tick(&mut self) {
-        if self.status == Status::Paused {
+        if self.status != Status::Active {
             return;
         }
 
         if Utc::now() > self.finish_at {
+            self.paused_at = Utc::now();
             self.status = Status::Completed;
         }
     }

@@ -1,12 +1,13 @@
-
-pub mod widget;
-
 use std::ops::DerefMut;
+
 use chrono::Duration;
 use eframe::epaint::FontFamily;
-use egui::{FontDefinitions, FontData, Separator, Ui, TopBottomPanel, Layout, Align, RichText, Widget, menu, SidePanel, CentralPanel, Slider};
+use egui::{Align, CentralPanel, FontData, FontDefinitions, Layout, menu, RichText, Separator, SidePanel, Slider, TopBottomPanel, Ui, Widget};
+
 use crate::app::widget::CircularTimer;
 use crate::service::{headlines::Headlines, timer::Timer};
+
+pub mod widget;
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
