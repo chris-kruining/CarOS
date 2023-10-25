@@ -28,8 +28,8 @@ serde = { version = "1", features = [ "derive" ] }
 wasm-bindgen-futures = "0.4"
 env_logger = "0.10"
 chrono = {version = "0.4", features = ["serde"]}
-#smithay = { git = "https://github.com/Smithay/smithay.git", rev = "36a0ec6", features = [ "renderer_glow", "wayland_frontend", "backend_winit" ] }
-#smithay-egui = { git = "https://github.com/Smithay/smithay-egui.git", rev = "4f971e4" }
+smithay = { git = "https://github.com/Smithay/smithay.git", rev = "36a0ec6", features = ["renderer_glow", "wayland_frontend", "backend_winit"] }
+smithay-egui = { git = "https://github.com/Smithay/smithay-egui.git", rev = "4f971e4" }
 
 
 [profile.release]

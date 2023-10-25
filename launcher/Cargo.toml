@@ -11,8 +11,8 @@ egui.workspace = true
 eframe.workspace = true
 log.workspace = true
 serde.workspace = true
-#smithay.workspace = true
-#smithay-egui.workspace = true
+smithay.workspace = true
+smithay-egui.workspace = true
 anyhow = "1.0"
 tracing-subscriber = "0.3"
 dash = { path = "../dash" }

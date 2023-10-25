@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #25262b;
+            display: grid;
+            grid-template-columns: 100%;
+            grid-auto-flow: row;
+            gap: 1em;
+            padding: 1em;
+        }
+
+        button {
+            color: white;
+            padding: 1em 1.25em;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .button1 {
+            background-color: white;
+            color: black;
+            border: 2px solid #4CAF50;
+        }
+
+        .button1:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .button2 {
+            background-color: white;
+            color: black;
+            border: 2px solid #FF0000;
+        }
+
+        .button2:hover {
+            background-color: #D10000;
+            color: white;
+        }
+    </style>
+
+    <script>
+        function onClick(status) {
+            fetch(`https://beheer.hazelhof.nl/wifi.php?status=${status}`);
+        }
+    </script>
+</head>
+
+<body>
+<button class="button1" onclick="onClick('auto-on')">ENABLE!</button>
+<button class="button2" onclick="onClick('off')">DISABLE</button>
+</body>
+</html>

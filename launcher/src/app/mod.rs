@@ -1,5 +1,5 @@
 use eframe::epaint::FontFamily;
-use egui::{ScrollArea, FontDefinitions, FontData, Separator, Ui, TopBottomPanel, Layout, Label, Align, RichText, Button};
+use egui::{FontData, FontDefinitions};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
